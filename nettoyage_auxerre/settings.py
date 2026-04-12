@@ -29,6 +29,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 # On autorise toutes les adresses pour le test, on affinera plus tard
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://mycleaning-site.onrender.com']
 
 # Application definition
 
