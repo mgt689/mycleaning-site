@@ -1,0 +1,62 @@
+{% load static %} <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réserver un nettoyage - MyCleaning</title>
+    <link rel="stylesheet" href="{% static 'reservations/style.css' %}">
+</head>
+<body>
+    
+  <div class="container">
+        <div class="logo-container">
+            <img src="{% static 'reservations/logo.png' %}" alt="Logo MyCleaning" class="main-logo">
+        </div>
+        <h1>Demande de devis - MyCleaning</h1>
+        
+        <form method="post">
+            {% csrf_token %}   
+            {{ form.as_p }}
+            <button type="submit">Envoyer ma demande</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const typePrestation = document.getElementById("id_type_prestation");
+            
+            // On cible les blocs parents (les paragraphes qui contiennent label + input)
+            const blocChambres = document.getElementById("id_nombre_chambres").parentNode;
+            const blocSalons = document.getElementById("id_nombre_salons").parentNode;
+            const blocBureaux = document.getElementById("id_nombre_bureaux").parentNode;
+
+            function gererAffichage() {
+                const choix = typePrestation.value;
+
+                if (choix === "BUREAU") {
+                    // Mode Bureau : on montre les bureaux, on cache le reste
+                    blocBureaux.style.display = "block";
+                    blocChambres.style.display = "none";
+                    blocSalons.style.display = "none";
+                } 
+                else if (choix === "AIRBNB" || choix === "MAISON") {
+                    // Mode Habitation : on cache les bureaux, on montre le reste
+                    blocBureaux.style.display = "none";
+                    blocChambres.style.display = "block";
+                    blocSalons.style.display = "block";
+                }
+                else {
+                    // Si rien n'est sélectionné au début, on peut tout cacher par défaut
+                    blocBureaux.style.display = "none";
+                    blocChambres.style.display = "none";
+                    blocSalons.style.display = "none";
+                }
+            }
+
+            // Lancer au chargement et à chaque changement
+            gererAffichage();
+            typePrestation.addEventListener("change", gererAffichage);
+        });
+    </script>
+</body>
+</html>

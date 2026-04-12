@@ -1,0 +1,116 @@
+/* Style général de la page */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f4f8; /* Un gris-bleu très clair et propre */
+    color: #333;
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* La carte blanche qui contient le formulaire */
+.container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08); /* Ombre douce moderne */
+    max-width: 600px;
+    width: 100%;
+}
+/* Style pour le logo MyCleaning */
+.logo-container {
+    text-align: center; /* Centre l'image */
+    margin-bottom: 20px; /* Espace avant le titre */
+}
+
+.main-logo {
+    max-width: 200px; /* Force une largeur maximale raisonnable */
+    height: auto; /* Garde les proportions */
+}
+h1 {
+    text-align: center;
+    color: #1a365d; /* Bleu marine élégant */
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+/* Espacement entre chaque question */
+form p {
+    margin-bottom: 20px;
+}
+
+/* Le texte des questions */
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #4a5568;
+}
+
+/* Style des champs de saisie */
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    box-sizing: border-box; /* Empêche le champ de déborder */
+    font-family: inherit;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+/* Effet quand le client clique dans un champ */
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #3182ce; /* Bordure qui devient bleue */
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    height: 120px;
+}
+
+/* Agrandir la case à cocher */
+input[type="checkbox"] {
+    transform: scale(1.5);
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* Le gros bouton d'envoi */
+button {
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    padding: 16px 20px;
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s;
+    margin-top: 20px;
+}
+
+/* Effet de survol du bouton */
+button:hover {
+    background-color: #2b6cb0;
+    transform: translateY(-2px); /* Petit effet de soulèvement */
+}
+
+/* Message d'erreur en rouge (géré par Django) */
+.errorlist {
+    color: #e53e3e;
+    list-style-type: none;
+    padding: 0;
+    margin-top: -10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}

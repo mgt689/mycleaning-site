@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demande envoyée - MyCleaning</title>
+    <link rel="stylesheet" href="{% static 'reservations/style.css' %}">
+    <style>
+        /* Quelques petits ajustements spécifiques pour cette page */
+        .success-content {
+            text-align: center;
+        }
+        .checkmark {
+            font-size: 70px;
+            margin-bottom: 10px;
+        }
+        .message-pro {
+            color: #4a5568;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container success-content">
+        <div class="logo-container">
+            <img src="{% static 'reservations/logo.png' %}" alt="Logo MyCleaning" class="main-logo">
+        <div class="checkmark">✅</div>
+        <h1>Demande envoyée !</h1>
+        
+        <p class="message-pro">
+            Merci pour votre confiance. Nous avons bien reçu votre demande de nettoyage.
+        </p>
+        <p class="message-pro">L'équipe MyCleaning étudie votre demande et vous contactera très rapidement pour confirmer le rendez-vous.</p>
+        </p>
+        
+        <br>
+        <a href="{% url 'faire_demande' %}" style="text-decoration: none;">
+            <button type="button">Retour à l'accueil</button>
+        </a>
+    </div>
+
+</body>
+</html>
