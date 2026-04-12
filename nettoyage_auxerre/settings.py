@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -115,14 +116,18 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = 'static/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+# C'est ici qu'on dit à WhiteNoise où stocker les fichiers en ligne
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Cette ligne est magique : elle compresse les fichiers pour que le site soit plus rapide
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# Configuration des emails pour le développement (affiche l'email dans la console)
+
+# IMPORTANT : Pour l'instant, tes emails s'affichent dans les "Logs" de Render. 
+# On garde ça pour tester si tout fonctionne en ligne !
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'contact@nettoyage-auxerre.fr'
+DEFAULT_FROM_EMAIL = 'contact@mycleaning.fr'

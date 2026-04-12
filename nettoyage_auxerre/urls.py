@@ -21,5 +21,6 @@ from reservations import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('demande/', views.faire_demande, name='faire_demande'),
-    path('succes/', views.demande_succes, name='demande_succes'), 
+    path('succes/', views.demande_succes, name='demande_succes'),
+    path('', RedirectView.as_view(url='demande/', permanent=True)), 
 ]
