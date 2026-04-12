@@ -32,7 +32,7 @@ Le système automatique MyCleaning.
                 message,
                 'ne-pas-repondre@mycleaning.fr', 
                 ['contact-admin@mycleaning.fr'],
-                fail_silently=False,
+                fail_silently=True,
             )
 
             # 4. REDIRECTION (Très important pour éviter l'erreur !)
