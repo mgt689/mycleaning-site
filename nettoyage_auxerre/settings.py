@@ -118,7 +118,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'reservations/static'),
 # C'est ici qu'on dit à WhiteNoise où stocker les fichiers en ligne
+]
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Cette ligne est magique : elle compresse les fichiers pour que le site soit plus rapide
