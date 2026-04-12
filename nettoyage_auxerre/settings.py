@@ -132,16 +132,14 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# On teste en mettant les infos directement pour isoler le problème
+# Configuration robuste pour Render + Brevo
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp-relay.brevo.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-EMAIL_TIMEOUT = 10
+EMAIL_PORT = 465               # On passe sur le port SSL direct
+EMAIL_USE_TLS = False          # On désactive TLS
+EMAIL_USE_SSL = True           # On active SSL (obligatoire pour le port 465)
+EMAIL_TIMEOUT = 10             # On n'attend pas plus de 10s
 
-# REMPLACE ICI PAR TES VRAIES INFOS BREVO POUR LE TEST
-EMAIL_HOST_USER = 'ton-email-de-compte-brevo@exemple.com' 
-EMAIL_HOST_PASSWORD = 'TA-CLE-SMTP-TRES-LONGUE' 
-
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'MyCleaning <rama12375@yahoo.com>'
