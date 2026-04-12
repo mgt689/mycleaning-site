@@ -131,7 +131,13 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# IMPORTANT : Pour l'instant, tes emails s'affichent dans les "Logs" de Render. 
-# On garde ça pour tester si tout fonctionne en ligne !
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'contact@mycleaning.fr'
+# Configuration des emails pour la production
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp-relay.brevo.com'  # On le met en dur pour être sûr
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+# L'adresse qui apparaîtra comme expéditeur (Doit être validée sur Brevo)
+DEFAULT_FROM_EMAIL = 'MyCleaning <rama12375@yahoo.com>'
