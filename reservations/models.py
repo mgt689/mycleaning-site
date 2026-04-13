@@ -33,3 +33,10 @@ class DemandeNettoyage(models.Model):
 
     def __str__(self):
         return f"{self.nom} - {self.ville} ({self.surface}m²)"
+    # À la fin de ton fichier models.py
+
+class DemandeAcceptee(DemandeNettoyage):
+    class Meta:
+        proxy = True # C'est le mot magique : Django ne créera pas de nouvelle table
+        verbose_name = "Demande Acceptée"
+        verbose_name_plural = "✅ Demandes Acceptées" # Un petit emoji pour que ta mère le repère vite !
