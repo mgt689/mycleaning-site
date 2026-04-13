@@ -132,14 +132,13 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Configuration robuste pour Render + Brevo
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-relay.brevo.com'
-EMAIL_PORT = 465               # On passe sur le port SSL direct
-EMAIL_USE_TLS = False          # On désactive TLS
-EMAIL_USE_SSL = True           # On active SSL (obligatoire pour le port 465)
-EMAIL_TIMEOUT = 10             # On n'attend pas plus de 10s
+# Configuration de secours : Affiche les emails dans les Logs de Render
+# On désactive temporairement Brevo car Render bloque les ports sur l'offre gratuite.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+# Tu peux laisser l'expéditeur
 DEFAULT_FROM_EMAIL = 'MyCleaning <rama12375@yahoo.com>'
+
+# Tu peux commenter (mettre un # devant) les autres lignes EMAIL_HOST, EMAIL_PORT, etc.
+# EMAIL_HOST = 'smtp-relay.brevo.com'
+# EMAIL_PORT = 465

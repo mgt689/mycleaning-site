@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import DemandeNettoyage
+from django.contrib.admin.models import LogEntry
 
 @admin.register(DemandeNettoyage)
 class DemandeNettoyageAdmin(admin.ModelAdmin):
@@ -51,3 +52,4 @@ L'équipe MyCleaning.
 
         # Cette ligne doit être alignée avec le 'if'
         super().save_model(request, obj, form, change)
+        admin.site.register(LogEntry)
