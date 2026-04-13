@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import DemandeNettoyage
-from django.contrib.admin.models import LogEntry
+from .models import DemandeNettoyage, DemandeAcceptee
 
 @admin.register(DemandeNettoyage)
 class DemandeNettoyageAdmin(admin.ModelAdmin):
@@ -53,3 +53,17 @@ L'équipe MyCleaning.
         # Cette ligne doit être alignée avec le 'if'
         super().save_model(request, obj, form, change)
         admin.site.register(LogEntry)
+        # N'oublie pas d'ajouter DemandeAcceptee dans tes imports tout en haut !
+# from .models import DemandeNettoyage, DemandeAcceptee
+
+class DemandeAccepteeAdmin(admin.ModelAdmin):
+    # Tu peux copier/coller ici le même 'list_display' que ton admin principal
+    # Exemple : list_display = ('nom', 'email', 'statut')
+
+    def get_queryset(self, request):
+        # Cette fonction récupère toutes les demandes, puis les filtre
+        qs = super().get_queryset(request)
+        
+        # ⚠️ TRÈS IMPORTANT : Remplace 'Confirmé' par le mot EXACT 
+        # que tu as mis dans tes choix de statut (ex: 'Accepté', 'Valide', etc.)
+        return qs.filter(statut='Confirmé') 
