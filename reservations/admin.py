@@ -46,7 +46,7 @@ L'équipe MyCleaning.
                 corps_email,
                 'contact@mycleaning.fr',
                 [obj.email],
-                fail_silently=False,
+                fail_silently=True,
             )
 
         # Cette ligne doit être alignée avec le 'if'
