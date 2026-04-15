@@ -24,6 +24,7 @@ class DemandeNettoyage(models.Model):
     nombre_bureaux = models.IntegerField(default=0, verbose_name="Nombre de bureaux") # Nouveau !
     nombre_toilettes = models.IntegerField(default=1, verbose_name="Nombre de toilettes/SdB")
     materiel_sur_place = models.BooleanField(default=False, verbose_name="Matériel fourni sur place")
+    details_prestation = models.TextField(blank=True, null=True, verbose_name="Détails de la prestation", help_text="Décrivez précisément votre demande de nettoyage (zones prioritaires, type de nettoyage, etc.)")
 
     # --- Gestion ---
     STATUT_CHOICES = [('ATTENTE', 'En attente'), ('ACCEPTEE', 'Acceptée'), ('REFUSEE', 'Refusée')]

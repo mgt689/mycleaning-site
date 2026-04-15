@@ -8,7 +8,8 @@ class DemandeForm(forms.ModelForm):
         fields = [
             'nom', 'email', 'numero_telephone', 'type_prestation', 'surface',
             'rue', 'code_postal', 'ville',
-            'nombre_chambres', 'nombre_salons', 'nombre_bureaux', 'nombre_toilettes', 'materiel_sur_place'
+            'nombre_chambres', 'nombre_salons', 'nombre_bureaux', 'nombre_toilettes', 'materiel_sur_place',
+            'details_prestation'
         ]
 
     def clean_numero_telephone(self):
