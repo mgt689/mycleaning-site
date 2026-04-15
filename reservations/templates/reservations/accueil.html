@@ -298,7 +298,7 @@
             color: white;
             padding: 120px 40px;
             text-align: center;
-            margin: 100px 0 0 0;
+            margin: 0;
         }
 
         .cta-full h2 {
@@ -765,6 +765,12 @@
         </div>
     </section>
 
+    <!-- CTA SECTION -->
+    <section class="cta-full">
+        <h2>Prêt pour un nettoyage impeccable ?</h2>
+        <a href="{% url 'faire_demande' %}" class="cta-btn">Obtenir un devis</a>
+    </section>
+
     <!-- PHOTOS SECTION -->
     {% if photos %}
     <section class="section">
@@ -806,12 +812,6 @@
         </div>
     </section>
     {% endif %}
-
-    <!-- CTA SECTION -->
-    <section class="cta-full">
-        <h2>Prêt pour un nettoyage impeccable ?</h2>
-        <a href="{% url 'faire_demande' %}" class="cta-btn">Obtenir un devis</a>
-    </section>
 
     <!-- FOOTER -->
     <footer>
