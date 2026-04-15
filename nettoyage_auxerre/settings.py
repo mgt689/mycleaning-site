@@ -88,7 +88,9 @@ WSGI_APPLICATION = 'nettoyage_auxerre.wsgi.application'
 
 import dj_database_url
 
-if os.environ.get('DATABASE_URL'):
+# Vérifier que DATABASE_URL est une URL valide (pas juste vide ou "://")
+database_url = os.environ.get('DATABASE_URL', '').strip()
+if database_url and '://' in database_url and database_url != '://':
     DATABASES = {
         'default': dj_database_url.config(conn_max_age=600)
     }
