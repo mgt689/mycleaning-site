@@ -40,3 +40,39 @@ class DemandeAcceptee(DemandeNettoyage):
         proxy = True # C'est le mot magique : Django ne créera pas de nouvelle table
         verbose_name = "Demande Acceptée"
         verbose_name_plural = "✅ Demandes Acceptées" # Un petit emoji pour que ta mère le repère vite !
+
+
+class Avis(models.Model):
+    """Modèle pour les avis clients"""
+    nom_client = models.CharField(max_length=100, verbose_name="Nom du client")
+    note = models.IntegerField(choices=[(5, '⭐⭐⭐⭐⭐ 5 stars'), (4, '⭐⭐⭐⭐ 4 stars'), (3, '⭐⭐⭐ 3 stars'), (2, '⭐⭐ 2 stars'), (1, '⭐ 1 star')], verbose_name="Note")
+    texte = models.TextField(verbose_name="Avis")
+    type_prestation = models.CharField(max_length=20, choices=[('AIRBNB', 'AirBnb'), ('BUREAU', 'Bureau'), ('MAISON', 'Maison / Appartement'), ('AUTRE', 'Autre')], default='AUTRE', verbose_name="Type de prestation")
+    publie = models.BooleanField(default=True, verbose_name="Publié")
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Avis"
+        verbose_name_plural = "Avis"
+        ordering = ['-date_creation']
+
+    def __str__(self):
+        return f"{self.nom_client} - {self.note} ⭐"
+
+
+class Photo(models.Model):
+    """Modèle pour les photos de nettoyage"""
+    titre = models.CharField(max_length=200, verbose_name="Titre")
+    description = models.TextField(blank=True, verbose_name="Description")
+    image = models.ImageField(upload_to='photos_nettoyage/', verbose_name="Image")
+    type_prestation = models.CharField(max_length=20, choices=[('AIRBNB', 'AirBnb'), ('BUREAU', 'Bureau'), ('MAISON', 'Maison / Appartement'), ('AUTRE', 'Autre')], default='AUTRE', verbose_name="Type de prestation")
+    affichee = models.BooleanField(default=True, verbose_name="Affichée sur l'accueil")
+    date_creation = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = "Photo"
+        verbose_name_plural = "Photos"
+        ordering = ['-date_creation']
+
+    def __str__(self):
+        return self.titre

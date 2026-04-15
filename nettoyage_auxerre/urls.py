@@ -16,12 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from reservations import views
-from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accueil/', views.accueil, name='accueil'),
     path('demande/', views.faire_demande, name='faire_demande'),
     path('succes/', views.demande_succes, name='demande_succes'),
-    path('', RedirectView.as_view(url='demande/', permanent=True)), 
+    path('', views.accueil, name='home'),  # La page d'accueil est la page par défaut
 ]
+
+# Servir les fichiers media en développement
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

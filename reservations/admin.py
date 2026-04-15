@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import DemandeNettoyage, DemandeAcceptee
+from .models import DemandeNettoyage, DemandeAcceptee, Avis, Photo
 
 @admin.register(DemandeNettoyage)
 class DemandeNettoyageAdmin(admin.ModelAdmin):
@@ -66,3 +66,50 @@ class DemandeAccepteeAdmin(admin.ModelAdmin):
         # ⚠️ TRÈS IMPORTANT : Remplace 'Confirmé' par le mot EXACT 
         # que tu as mis dans tes choix de statut (ex: 'Accepté', 'Valide', etc.)
         return qs.filter(statut='ACCEPTEE') 
+
+
+@admin.register(Avis)
+class AvisAdmin(admin.ModelAdmin):
+    list_display = ('nom_client', 'note', 'publie', 'date_creation')
+    list_filter = ('note', 'publie', 'type_prestation')
+    search_fields = ('nom_client', 'texte')
+    readonly_fields = ('date_creation',)
+    
+    fieldsets = (
+        ('Client', {
+            'fields': ('nom_client',)
+        }),
+        ('Avis', {
+            'fields': ('note', 'texte', 'type_prestation')
+        }),
+        ('Gestion', {
+            'fields': ('publie', 'date_creation')
+        }),
+    )
+
+
+@admin.register(Photo)
+class PhotoAdmin(admin.ModelAdmin):
+    list_display = ('titre', 'type_prestation', 'affichee', 'date_creation')
+    list_filter = ('type_prestation', 'affichee')
+    search_fields = ('titre', 'description')
+    readonly_fields = ('date_creation', 'apercu_image')
+    
+    fieldsets = (
+        ('Photo', {
+            'fields': ('titre', 'image', 'apercu_image', 'description')
+        }),
+        ('Type', {
+            'fields': ('type_prestation',)
+        }),
+        ('Gestion', {
+            'fields': ('affichee', 'date_creation')
+        }),
+    )
+    
+    def apercu_image(self, obj):
+        if obj.image:
+            from django.utils.html import format_html
+            return format_html('<img src="{}" style="max-width: 300px;" />', obj.image.url)
+        return "-"
+    apercu_image.short_description = "Aperçu" 

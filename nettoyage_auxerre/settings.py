@@ -148,6 +148,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Cette ligne est magique : elle compresse les fichiers pour que le site soit plus rapide
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# Media files (Photos, uploads)
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

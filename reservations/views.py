@@ -2,6 +2,19 @@ from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import DemandeForm
+from .models import Avis, Photo
+
+def accueil(request):
+    """Vue pour la page d'accueil avec avis et photos"""
+    avis = Avis.objects.filter(publie=True)[:6]  # Les 6 derniers avis publiés
+    photos = Photo.objects.filter(affichee=True)
+    
+    context = {
+        'avis': avis,
+        'photos': photos,
+    }
+    return render(request, 'reservations/accueil.html', context)
+
 
 def faire_demande(request):
     if request.method == 'POST':
