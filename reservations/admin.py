@@ -1,5 +1,4 @@
 from django.contrib import admin
-from .models import DemandeNettoyage
 from .models import DemandeNettoyage, DemandeAcceptee
 
 @admin.register(DemandeNettoyage)
@@ -45,20 +44,20 @@ L'équipe MyCleaning.
             send_mail(
                 sujet,
                 corps_email,
-                'contact@mycleaning.fr',
+                'contact@mycleaning.studio',
                 [obj.email],
                 fail_silently=True,
             )
 
         # Cette ligne doit être alignée avec le 'if'
         super().save_model(request, obj, form, change)
-        admin.site.register(LogEntry)
-        # N'oublie pas d'ajouter DemandeAcceptee dans tes imports tout en haut !
-# from .models import DemandeNettoyage, DemandeAcceptee
 
+
+@admin.register(DemandeAcceptee)
 class DemandeAccepteeAdmin(admin.ModelAdmin):
-    # Tu peux copier/coller ici le même 'list_display' que ton admin principal
-    # Exemple : list_display = ('nom', 'email', 'statut')
+    list_display = ('nom', 'type_prestation', 'statut', 'date_creation')
+    list_filter = ('statut', 'type_prestation')
+    search_fields = ('nom', 'numero_telephone', 'ville')
 
     def get_queryset(self, request):
         # Cette fonction récupère toutes les demandes, puis les filtre
