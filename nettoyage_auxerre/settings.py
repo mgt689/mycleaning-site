@@ -161,3 +161,10 @@ DEFAULT_FROM_EMAIL = 'contact@mycleaning.studio'
 
 # Email admin pour les notifications
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL')
+
+# HTTPS et sécurité des cookies
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+SECURE_SSL_REDIRECT = True
