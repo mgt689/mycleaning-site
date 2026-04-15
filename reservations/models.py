@@ -63,8 +63,8 @@ class Avis(models.Model):
 
 class Photo(models.Model):
     """Modèle pour les photos de nettoyage"""
-    titre = models.CharField(max_length=200, verbose_name="Titre")
-    description = models.TextField(blank=True, verbose_name="Description")
+    titre = models.CharField(max_length=200, blank=True, null=True, verbose_name="Titre")
+    description = models.TextField(blank=True, null=True, verbose_name="Description")
     image = models.ImageField(upload_to='photos_nettoyage/', verbose_name="Image")
     type_prestation = models.CharField(max_length=20, choices=[('AIRBNB', 'AirBnb'), ('BUREAU', 'Bureau'), ('MAISON', 'Maison / Appartement'), ('AUTRE', 'Autre')], default='AUTRE', verbose_name="Type de prestation")
     affichee = models.BooleanField(default=True, verbose_name="Affichée sur l'accueil")
@@ -76,4 +76,4 @@ class Photo(models.Model):
         ordering = ['-date_creation']
 
     def __str__(self):
-        return self.titre
+        return self.titre or "Photo sans titre"
