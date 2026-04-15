@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+# Charger le fichier .env
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,8 +34,12 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 # On autorise toutes les adresses pour le test, on affinera plus tard
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://mycleaning-site.onrender.com']
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://mycleaning.studio',
+    'https://www.mycleaning.studio',
+    'https://mycleaning-site.onrender.com',
+    'https://mycleaning-sites-4vyvg.ondigitalocean.app',
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -77,11 +86,13 @@ WSGI_APPLICATION = 'nettoyage_auxerre.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600
+    )
 }
 
 
@@ -132,13 +143,14 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Configuration de secours : Affiche les emails dans les Logs de Render
-# On désactive temporairement Brevo car Render bloque les ports sur l'offre gratuite.
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Configuration Gmail SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = 'contact@mycleaning.studio'
 
-# Tu peux laisser l'expéditeur
-DEFAULT_FROM_EMAIL = 'MyCleaning <rama12375@yahoo.com>'
-
-# Tu peux commenter (mettre un # devant) les autres lignes EMAIL_HOST, EMAIL_PORT, etc.
-# EMAIL_HOST = 'smtp-relay.brevo.com'
-# EMAIL_PORT = 465
+# Email admin pour les notifications
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL')

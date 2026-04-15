@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
+from django.conf import settings
 from .forms import DemandeForm
 
 def faire_demande(request):
@@ -9,30 +10,54 @@ def faire_demande(request):
             # 1. Sauvegarde
             nouvelle_demande = form.save() 
             
-            # 2. Préparation de l'email
-            sujet = f"🔔 NOUVELLE DEMANDE : {nouvelle_demande.get_type_prestation_display()} à Auxerre"
-            message = f"""
-Bonjour l'équipe MyCleaning,
+            # 2. EMAIL À L'ADMIN
+            sujet_admin = f"🔔 NOUVELLE DEMANDE : {nouvelle_demande.get_type_prestation_display()} à Auxerre"
+            message_admin = f"""Bonjour l'équipe MyCleaning,
 
 Une nouvelle demande de devis vient d'être déposée sur le site !
 
 Détails du client :
 - Nom : {nouvelle_demande.nom}
+- Email : {nouvelle_demande.email}
 - Téléphone : {nouvelle_demande.numero_telephone}
 - Prestation : {nouvelle_demande.get_type_prestation_display()}
+- Surface : {nouvelle_demande.surface}m²
+- Adresse : {nouvelle_demande.rue}, {nouvelle_demande.code_postal} {nouvelle_demande.ville}
 
 Connectez-vous sur votre espace administrateur pour voir les détails :
-http://127.0.0.1:8000/admin/
+https://mycleaning-sites-4vyvg.ondigitalocean.app/admin/
 
-Le système automatique MyCleaning.
-"""
-            # 3. Envoi de l'email
+Le système automatique MyCleaning."""
             send_mail(
-                sujet,
-                message,
-                'ne-pas-repondre@mycleaning.fr', 
-                ['contact-admin@mycleaning.fr'],
-                fail_silently=True,
+                sujet_admin,
+                message_admin,
+                settings.DEFAULT_FROM_EMAIL,
+                [settings.ADMIN_EMAIL],
+                fail_silently=False,
+            )
+            
+            # 3. EMAIL DE CONFIRMATION AU CLIENT
+            sujet_client = "✅ Votre demande de devis MyCleaning a été reçue"
+            message_client = f"""Bonjour {nouvelle_demande.nom},
+
+Merci d'avoir soumis votre demande de devis sur MyCleaning !
+
+Résumé de votre demande :
+- Prestation : {nouvelle_demande.get_type_prestation_display()}
+- Surface : {nouvelle_demande.surface}m²
+- Adresse : {nouvelle_demande.rue}, {nouvelle_demande.code_postal} {nouvelle_demande.ville}
+
+Notre équipe examinera votre demande et vous recontactera sous peu au {nouvelle_demande.numero_telephone}.
+
+Cordialement,
+L'équipe MyCleaning
+contact@mycleaning.studio"""
+            send_mail(
+                sujet_client,
+                message_client,
+                settings.DEFAULT_FROM_EMAIL,
+                [nouvelle_demande.email],
+                fail_silently=False,
             )
 
             # 4. REDIRECTION (Très important pour éviter l'erreur !)
