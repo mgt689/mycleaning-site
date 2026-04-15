@@ -65,4 +65,4 @@ class DemandeAccepteeAdmin(admin.ModelAdmin):
         
         # ⚠️ TRÈS IMPORTANT : Remplace 'Confirmé' par le mot EXACT 
         # que tu as mis dans tes choix de statut (ex: 'Accepté', 'Valide', etc.)
-        return qs.filter(statut='Confirmé') 
+        return qs.filter(statut='ACCEPTEE') 

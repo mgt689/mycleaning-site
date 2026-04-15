@@ -43,6 +43,7 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',  # Doit être AVANT django.contrib.admin !
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -163,8 +164,18 @@ DEFAULT_FROM_EMAIL = 'contact@mycleaning.studio'
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL')
 
 # HTTPS et sécurité des cookies
-CSRF_COOKIE_SECURE = True
+# En développement (DEBUG=True), on désactive la sécurité HTTPS
+# En production (DEBUG=False), on force HTTPS
+CSRF_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_HTTPONLY = False
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_HTTPONLY = True
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = not DEBUG
+
+# Configuration Jazzmin
+JAZZMIN_SETTINGS = {
+    "site_title": "MyCleaning Admin",
+    "site_header": "MyCleaning",
+    "show_sidebar": True,
+    "navigation_expanded": True,
+}
