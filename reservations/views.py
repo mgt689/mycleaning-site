@@ -6,7 +6,7 @@ from .models import Avis, Photo
 
 def accueil(request):
     """Vue pour la page d'accueil avec avis et photos"""
-    avis = Avis.objects.filter(publie=True)[:6]  # Les 6 derniers avis publiés
+    avis = Avis.objects.filter(publie=True)  # Tous les avis publiés
     photos = Photo.objects.filter(affichee=True)
     
     context = {
