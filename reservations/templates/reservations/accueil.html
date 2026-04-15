@@ -7,6 +7,388 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'reservations/style.css' %}">
     <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* === HEADER === */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* === HERO SECTION === */
+        .hero {
+            margin-top: 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 6vw, 80px);
+            font-weight: 800;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 50px;
+            opacity: 0.95;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background-color: white;
+            color: #667eea;
+            padding: 18px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* === SECTION CONTAINER === */
+        .section {
+            padding: 100px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 5vw, 60px);
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 80px;
+            color: #333;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 20px auto 0;
+            border-radius: 3px;
+        }
+
+        /* === PHOTOS GRID === */
+        .photos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .photo-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-card-content {
+            padding: 30px;
+        }
+
+        .photo-card h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .photo-card p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* === AVIS GRID === */
+        .avis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .avis-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 5px solid #667eea;
+        }
+
+        .avis-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .avis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .avis-client {
+            font-weight: 700;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .avis-stars {
+            color: #ffc107;
+            font-size: 18px;
+            letter-spacing: 3px;
+        }
+
+        .avis-texte {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.8;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .avis-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* === CTA SECTION === */
+        .cta-full {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 120px 40px;
+            text-align: center;
+            margin: 100px 0 0 0;
+        }
+
+        .cta-full h2 {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 800;
+            margin-bottom: 50px;
+            line-height: 1.2;
+        }
+
+        /* === FOOTER === */
+        footer {
+            background: #1a1a1a;
+            color: #999;
+            padding: 80px 40px 40px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+            margin-bottom: 50px;
+        }
+
+        .footer-section h3 {
+            color: #667eea;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #999;
+            text-decoration: none;
+            font-size: 14px;
+            line-height: 1.8;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 30px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 20px;
+            }
+
+            nav {
+                gap: 20px;
+            }
+
+            .section {
+                padding: 60px 20px;
+            }
+
+            .section-title {
+                margin-bottom: 50px;
+            }
+
+            .photos-grid,
+            .avis-grid {
+                gap: 25px;
+            }
+
+            .avis-card {
+                padding: 25px;
+            }
+
+            .cta-full {
+                padding: 80px 20px;
+            }
+
+            .footer-content {
+                gap: 40px;
+            }
+        }
+    </style>
         * {
             margin: 0;
             padding: 0;
@@ -361,17 +743,14 @@
                 font-size: 24px;
             }
         }
-    </style>
 </head>
 <body>
     <!-- HEADER -->
     <header>
         <div class="header-container">
-            <div class="logo">
-                ✨ MyCleaning
-            </div>
+            <div class="logo">✨ MyCleaning</div>
             <nav>
-                <a href="{% url 'accueil' %}">Accueil</a>
+                <a href="#accueil">Accueil</a>
                 <a href="{% url 'faire_demande' %}">Demander un devis</a>
             </nav>
         </div>
@@ -379,60 +758,60 @@
 
     <!-- HERO SECTION -->
     <section class="hero">
-        <h1>Nettoyage Professionnel à Auxerre</h1>
-        <p>Vos espaces, brillants et impeccables</p>
-        <a href="{% url 'faire_demande' %}" class="cta-button">Demander un devis gratuit</a>
+        <div class="hero-content">
+            <h1>Nettoyage Professionnel à Auxerre</h1>
+            <p>Vos espaces, brillants et impeccables</p>
+            <a href="{% url 'faire_demande' %}" class="cta-btn">Demander un devis gratuit</a>
+        </div>
     </section>
 
-    <div class="container">
-        <!-- PHOTOS SECTION -->
-        {% if photos %}
-        <section class="section">
-            <h2>Nos Réalisations</h2>
-            <div class="photos-grid">
-                {% for photo in photos %}
-                <div class="photo-card">
-                    <img src="{{ photo.image.url }}" alt="{{ photo.titre }}">
-                    <div class="photo-card-content">
-                        <h3>{{ photo.titre }}</h3>
-                        <p>{{ photo.description }}</p>
-                        <span class="type-badge">{{ photo.get_type_prestation_display }}</span>
-                    </div>
+    <!-- PHOTOS SECTION -->
+    {% if photos %}
+    <section class="section">
+        <h2 class="section-title">Nos Réalisations</h2>
+        <div class="photos-grid">
+            {% for photo in photos %}
+            <div class="photo-card">
+                <img src="{{ photo.image.url }}" alt="{{ photo.titre }}">
+                <div class="photo-card-content">
+                    <h3>{{ photo.titre }}</h3>
+                    <p>{{ photo.description }}</p>
+                    <span class="badge">{{ photo.get_type_prestation_display }}</span>
                 </div>
-                {% endfor %}
             </div>
-        </section>
-        {% endif %}
-
-        <!-- AVIS SECTION -->
-        {% if avis %}
-        <section class="section">
-            <h2>Avis de Nos Clients</h2>
-            <div class="avis-grid">
-                {% for a in avis %}
-                <div class="avis-card">
-                    <div class="avis-header">
-                        <div class="avis-client">{{ a.nom_client }}</div>
-                        <div class="avis-note">
-                            {% for i in "12345" %}
-                                {% if forloop.counter <= a.note %}★{% else %}☆{% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <p class="avis-texte">"{{ a.texte }}"</p>
-                    <span class="avis-prestation">{{ a.get_type_prestation_display }}</span>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
-        {% endif %}
-
-        <!-- CTA SECTION -->
-        <div class="cta-section">
-            <h2>Prêt pour un nettoyage impeccable ?</h2>
-            <a href="{% url 'faire_demande' %}" class="cta-button-dark">Obtenir un devis</a>
+            {% endfor %}
         </div>
-    </div>
+    </section>
+    {% endif %}
+
+    <!-- AVIS SECTION -->
+    {% if avis %}
+    <section class="section">
+        <h2 class="section-title">Avis de Nos Clients</h2>
+        <div class="avis-grid">
+            {% for a in avis %}
+            <div class="avis-card">
+                <div class="avis-header">
+                    <div class="avis-client">{{ a.nom_client }}</div>
+                    <div class="avis-stars">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= a.note %}★{% else %}☆{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <p class="avis-texte">"{{ a.texte }}"</p>
+                <span class="avis-badge">{{ a.get_type_prestation_display }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- CTA SECTION -->
+    <section class="cta-full">
+        <h2>Prêt pour un nettoyage impeccable ?</h2>
+        <a href="{% url 'faire_demande' %}" class="cta-btn">Obtenir un devis</a>
+    </section>
 
     <!-- FOOTER -->
     <footer>
@@ -443,7 +822,7 @@
             </div>
             <div class="footer-section">
                 <h3>Menu</h3>
-                <a href="{% url 'accueil' %}">Accueil</a>
+                <a href="#accueil">Accueil</a>
                 <a href="{% url 'faire_demande' %}">Demander un devis</a>
             </div>
             <div class="footer-section">
