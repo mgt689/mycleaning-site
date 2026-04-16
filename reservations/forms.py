@@ -6,11 +6,14 @@ class DemandeForm(forms.ModelForm):
     class Meta:
         model = DemandeNettoyage
         fields = [
-            'nom', 'email', 'numero_telephone', 'type_prestation', 'surface',
+            'nom', 'email', 'numero_telephone', 'type_prestation', 'surface', 'date_souhaitee',
             'rue', 'code_postal', 'ville',
             'nombre_chambres', 'nombre_salons', 'nombre_bureaux', 'nombre_toilettes', 'materiel_sur_place',
             'details_prestation'
         ]
+        widgets = {
+            'date_souhaitee': forms.DateInput(attrs={'type': 'date'}),
+        }
 
     def clean_numero_telephone(self):
         numero = self.cleaned_data.get('numero_telephone').replace(" ", "")

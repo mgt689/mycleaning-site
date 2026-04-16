@@ -261,6 +261,86 @@
             color: var(--dark);
         }
 
+        /* === COMMENT ÇA MARCHE === */
+        .step-card {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            border: 1px solid #f1f5f9;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            background: #e0f2fe;
+            color: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .step-desc {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* === FAQ === */
+        .faq-list {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+        }
+
+        .faq-item summary {
+            cursor: pointer;
+            font-weight: 800;
+            color: var(--dark);
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .faq-item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq-item summary::after {
+            content: "＋";
+            color: var(--primary);
+            font-weight: 900;
+        }
+
+        .faq-item[open] summary::after {
+            content: "—";
+        }
+
+        .faq-item p {
+            margin-top: 12px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
         /* === CTA FOOTER === */
         .cta-footer {
             background: var(--dark);
@@ -340,6 +420,8 @@
             <nav>
                 <a href="#realisations">Nos Réalisations</a>
                 <a href="#avis">Avis</a>
+                <a href="#comment-ca-marche">Comment ça marche</a>
+                <a href="#faq">FAQ</a>
                 <a href="{% url 'faire_demande' %}" class="nav-cta">Demander un devis</a>
             </nav>
         </div>
@@ -363,7 +445,7 @@
         <div class="grid-cards">
             {% for photo in photos %}
             <div class="card">
-                <img src="{{ photo.image.url }}" alt="{{ photo.titre }}" class="card-img">
+                <img src="{{ photo.image.url }}" alt="{{ photo.titre|default:'Réalisation MyCleaning' }}" class="card-img">
                 <div class="card-content">
                     {% if photo.titre %}<h3 class="card-title">{{ photo.titre }}</h3>{% endif %}
                     {% if photo.description %}<p class="card-desc">{{ photo.description }}</p>{% endif %}
@@ -398,6 +480,54 @@
     </section>
     {% endif %}
 
+    <section id="comment-ca-marche" class="section">
+        <div class="section-header">
+            <h2 class="section-title">Comment ça marche ?</h2>
+            <p class="section-subtitle">3 étapes simples, sans engagement.</p>
+        </div>
+        <div class="grid-cards">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Demande en ligne</h3>
+                <p class="step-desc">Décrivez votre besoin en quelques clics.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Devis sous 24h</h3>
+                <p class="step-desc">Nous vous recontactons rapidement pour confirmer les détails.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Intervention impeccable</h3>
+                <p class="step-desc">Une prestation soignée, au moment convenu.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="section" style="background-color: white;">
+        <div class="section-header">
+            <h2 class="section-title">FAQ</h2>
+            <p class="section-subtitle">Les réponses aux questions les plus fréquentes.</p>
+        </div>
+
+        <div class="faq-list">
+            <details class="faq-item">
+                <summary>Faut-il fournir les produits et le matériel ?</summary>
+                <p>Vous pouvez indiquer dans votre demande si des produits et du matériel sont disponibles sur place. Si besoin, nous vous recontactons pour confirmer l'organisation la plus simple.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>Êtes-vous assurés en cas de casse ?</summary>
+                <p>Nous intervenons avec soin et professionnalisme. En cas d'incident, contactez-nous rapidement afin que nous puissions traiter la situation au mieux.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>Comment se passe le paiement ?</summary>
+                <p>Les modalités de paiement sont définies lors du devis (ex : virement, espèces, etc.). Tout est clarifié avant l'intervention.</p>
+            </details>
+        </div>
+    </section>
+
     <section class="cta-footer">
         <h2>Prêt à déléguer votre ménage ?</h2>
         <p style="margin-bottom: 30px; color: #cbd5e1; font-size: 18px;">Contactez-nous dès aujourd'hui pour une estimation sur mesure.</p>
@@ -414,6 +544,8 @@
                 <h3>Liens Rapides</h3>
                 <a href="#realisations">Nos Réalisations</a>
                 <a href="#avis">Avis Clients</a>
+                <a href="#comment-ca-marche">Comment ça marche</a>
+                <a href="#faq">FAQ</a>
                 <a href="{% url 'faire_demande' %}">Demander un devis</a>
             </div>
             <div class="footer-col">

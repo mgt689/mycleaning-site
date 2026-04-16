@@ -22,6 +22,12 @@ def faire_demande(request):
         if form.is_valid():
             # 1. Sauvegarde
             nouvelle_demande = form.save() 
+
+            date_souhaitee_txt = (
+                nouvelle_demande.date_souhaitee.strftime("%d/%m/%Y")
+                if nouvelle_demande.date_souhaitee
+                else "Non précisée"
+            )
             
             # 2. EMAIL À L'ADMIN
             sujet_admin = f"🔔 NOUVELLE DEMANDE : {nouvelle_demande.get_type_prestation_display()} à Auxerre"
@@ -35,6 +41,7 @@ Détails du client :
 - Téléphone : {nouvelle_demande.numero_telephone}
 - Prestation : {nouvelle_demande.get_type_prestation_display()}
 - Surface : {nouvelle_demande.surface}m²
+- Date souhaitée : {date_souhaitee_txt}
 - Adresse : {nouvelle_demande.rue}, {nouvelle_demande.code_postal} {nouvelle_demande.ville}
 
 Connectez-vous sur votre espace administrateur pour voir les détails :
@@ -58,6 +65,7 @@ Merci d'avoir soumis votre demande de devis sur MyCleaning !
 Résumé de votre demande :
 - Prestation : {nouvelle_demande.get_type_prestation_display()}
 - Surface : {nouvelle_demande.surface}m²
+- Date souhaitée : {date_souhaitee_txt}
 - Adresse : {nouvelle_demande.rue}, {nouvelle_demande.code_postal} {nouvelle_demande.ville}
 
 Notre équipe examinera votre demande et vous recontactera sous peu au {nouvelle_demande.numero_telephone}.

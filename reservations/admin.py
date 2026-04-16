@@ -3,7 +3,7 @@ from .models import DemandeNettoyage, DemandeAcceptee, Avis, Photo
 
 @admin.register(DemandeNettoyage)
 class DemandeNettoyageAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'type_prestation', 'statut', 'date_creation')
+    list_display = ('nom', 'type_prestation', 'date_souhaitee', 'statut', 'date_creation')
     list_filter = ('statut', 'type_prestation')
     
     # 1. On remplace 'adresse' par 'ville' dans la barre de recherche
@@ -13,7 +13,8 @@ class DemandeNettoyageAdmin(admin.ModelAdmin):
     # On ajoute email, surface, rue, code_postal, ville, nombre_bureaux et on enlève adresse
     fields = (
         'nom', 'email', 'numero_telephone', 
-        'surface', 'rue', 'code_postal', 'ville', 
+        'surface', 'date_souhaitee',
+        'rue', 'code_postal', 'ville', 
         'type_prestation', 
         'nombre_chambres', 'nombre_salons', 'nombre_bureaux', 'nombre_toilettes', 
         'materiel_sur_place', 
@@ -55,7 +56,7 @@ L'équipe MyCleaning.
 
 @admin.register(DemandeAcceptee)
 class DemandeAccepteeAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'type_prestation', 'statut', 'date_creation')
+    list_display = ('nom', 'type_prestation', 'date_souhaitee', 'statut', 'date_creation')
     list_filter = ('statut', 'type_prestation')
     search_fields = ('nom', 'numero_telephone', 'ville')
 
