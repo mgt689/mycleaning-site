@@ -14,26 +14,35 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 
-# Charger le fichier .env
-load_dotenv()
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Charger le fichier .env explicitement
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+3(1h7coi)hpahn&u)&w+es4^1f*kq110n2fopqhxe1su)2_!$'
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-+3(1h7coi)hpahn&u)&w+es4^1f*kq110n2fopqhxe1su)2_!$',
+)
 
-import os
+# En production, DEBUG doit être False.
+_debug_env = os.environ.get('DJANGO_DEBUG', os.environ.get('DEBUG', 'False'))
+DEBUG = str(_debug_env).strip().lower() in ('1', 'true', 'yes', 'on')
 
-# En production, on mettra une variable d'environnement. En local, c'est True par défaut.
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
-
-# On autorise toutes les adresses pour le test, on affinera plus tard
-ALLOWED_HOSTS = ['*']
+_allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '').strip()
+if _allowed_hosts_env:
+    ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_env.split(',') if h.strip()]
+elif DEBUG:
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = [
+        'mycleaning.studio',
+        'www.mycleaning.studio',
+        'mycleaning-sites-4vyvg.ondigitalocean.app',
+    ]
 CSRF_TRUSTED_ORIGINS = [
     'https://mycleaning.studio',
     'https://www.mycleaning.studio',
@@ -88,14 +97,22 @@ WSGI_APPLICATION = 'nettoyage_auxerre.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 import dj_database_url
+from urllib.parse import urlparse
 
-# Vérifier que DATABASE_URL est une URL valide (pas juste vide ou "://")
-database_url = os.environ.get('DATABASE_URL', '').strip()
+# Base de données locale par défaut (SQLite)
+# En production, on doit fournir une URL (ex: PostgreSQL) via variable d'environnement.
+database_url = (
+    os.environ.get('DATABASE_URL')
+    or os.environ.get('DATABASE_URL')
+    or ''
+).strip()
+
 if database_url and '://' in database_url and database_url != '://':
     DATABASES = {
-        'default': dj_database_url.config(conn_max_age=600)
+        'default': dj_database_url.parse(database_url, conn_max_age=600)
     }
 else:
+    # Utiliser SQLite en développement local
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
