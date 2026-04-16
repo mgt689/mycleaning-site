@@ -1,25 +1,150 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.conf import settings
+from django.http import HttpResponse
+from django.utils import timezone
+from django.utils.text import slugify
+
 from .models import DemandeNettoyage, DemandeAcceptee, Avis, Photo
+
 
 @admin.register(DemandeNettoyage)
 class DemandeNettoyageAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'type_prestation', 'date_souhaitee', 'statut', 'date_creation')
+    list_display = ('nom', 'type_prestation', 'surface', 'prix_devis', 'date_souhaitee', 'statut', 'date_creation')
     list_filter = ('statut', 'type_prestation')
-    
+    actions = ['generer_devis_pdf']
+
     # 1. On remplace 'adresse' par 'ville' dans la barre de recherche
     search_fields = ('nom', 'numero_telephone', 'ville')
-    
+
     # 2. On met à jour l'ordre d'affichage dans la fiche client
-    # On ajoute email, surface, rue, code_postal, ville, nombre_bureaux et on enlève adresse
     fields = (
-        'nom', 'email', 'numero_telephone', 
-        'surface', 'date_souhaitee',
-        'rue', 'code_postal', 'ville', 
-        'type_prestation', 
-        'nombre_chambres', 'nombre_salons', 'nombre_bureaux', 'nombre_toilettes', 
-        'materiel_sur_place', 
-        'statut', 'commentaire_admin'
+        'nom', 'email', 'numero_telephone',
+        'surface', 'date_souhaitee', 'prix_devis',
+        'rue', 'code_postal', 'ville',
+        'type_prestation',
+        'nombre_chambres', 'nombre_salons', 'nombre_bureaux', 'nombre_toilettes',
+        'materiel_sur_place',
+        'statut', 'commentaire_admin',
     )
+
+    def generer_devis_pdf(self, request, queryset):
+        """Génère un devis PDF pour UNE demande sélectionnée."""
+        if queryset.count() != 1:
+            self.message_user(
+                request,
+                "Sélectionnez une seule demande pour générer un devis PDF.",
+                level=messages.ERROR,
+            )
+            return
+
+        demande = queryset.first()
+
+        try:
+            from io import BytesIO
+            from reportlab.lib.pagesizes import A4
+            from reportlab.lib.units import mm
+            from reportlab.lib.utils import ImageReader
+            from reportlab.pdfgen import canvas
+        except Exception:
+            self.message_user(
+                request,
+                "Le module PDF n'est pas disponible (reportlab).",
+                level=messages.ERROR,
+            )
+            return
+
+        buffer = BytesIO()
+        c = canvas.Canvas(buffer, pagesize=A4)
+        width, height = A4
+
+        margin_x = 18 * mm
+        y = height - 18 * mm
+
+        # Logo
+        logo_path = settings.BASE_DIR / 'reservations' / 'static' / 'reservations' / 'logo.png'
+        if logo_path.exists():
+            try:
+                c.drawImage(ImageReader(str(logo_path)), margin_x, y - 18 * mm, width=35 * mm, height=18 * mm, mask='auto')
+            except Exception:
+                pass
+
+        # En-tête
+        c.setFont("Helvetica-Bold", 18)
+        c.drawString(margin_x + 42 * mm, y - 8 * mm, "DEVIS")
+
+        c.setFont("Helvetica", 10)
+        c.drawString(margin_x + 42 * mm, y - 14 * mm, f"Date : {timezone.localdate().strftime('%d/%m/%Y')}")
+        c.drawString(margin_x + 42 * mm, y - 20 * mm, f"Référence : DEM-{demande.id}")
+
+        y -= 34 * mm
+
+        # Client
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(margin_x, y, "Client")
+        y -= 6 * mm
+
+        c.setFont("Helvetica", 10)
+        c.drawString(margin_x, y, f"Nom : {demande.nom}")
+        y -= 5 * mm
+        c.drawString(margin_x, y, f"Email : {demande.email}")
+        y -= 5 * mm
+        c.drawString(margin_x, y, f"Téléphone : {demande.numero_telephone}")
+        y -= 8 * mm
+
+        # Adresse
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(margin_x, y, "Adresse d'intervention")
+        y -= 6 * mm
+
+        c.setFont("Helvetica", 10)
+        c.drawString(margin_x, y, f"{demande.rue}")
+        y -= 5 * mm
+        c.drawString(margin_x, y, f"{demande.code_postal} {demande.ville}")
+        y -= 8 * mm
+
+        # Détails prestation
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(margin_x, y, "Détails")
+        y -= 6 * mm
+
+        c.setFont("Helvetica", 10)
+        c.drawString(margin_x, y, f"Type : {demande.get_type_prestation_display()}")
+        y -= 5 * mm
+        c.drawString(margin_x, y, f"Surface : {demande.surface} m²")
+        y -= 5 * mm
+
+        date_souhaitee = demande.date_souhaitee.strftime('%d/%m/%Y') if demande.date_souhaitee else "Non précisée"
+        c.drawString(margin_x, y, f"Date souhaitée : {date_souhaitee}")
+        y -= 5 * mm
+
+        materiel = "Oui" if demande.materiel_sur_place else "Non"
+        c.drawString(margin_x, y, f"Matériel sur place : {materiel}")
+        y -= 8 * mm
+
+        # Prix
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(margin_x, y, "Prix")
+        y -= 6 * mm
+
+        c.setFont("Helvetica", 10)
+        prix_txt = f"{demande.prix_devis} €" if demande.prix_devis is not None else "Non renseigné"
+        c.drawString(margin_x, y, f"Prix du devis : {prix_txt}")
+        y -= 10 * mm
+
+        # Notes
+        c.setFont("Helvetica", 9)
+        c.drawString(margin_x, y, "Ce devis est fourni à titre indicatif et peut être ajusté après confirmation des détails.")
+
+        c.showPage()
+        c.save()
+
+        buffer.seek(0)
+        filename = f"devis-dem-{demande.id}-{slugify(demande.nom) or 'client'}.pdf"
+        response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+
+    generer_devis_pdf.short_description = "Générer un devis (PDF)"
 
     def save_model(self, request, obj, form, change):
         if change and 'statut' in form.changed_data:
@@ -55,18 +180,10 @@ L'équipe MyCleaning.
 
 
 @admin.register(DemandeAcceptee)
-class DemandeAccepteeAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'type_prestation', 'date_souhaitee', 'statut', 'date_creation')
-    list_filter = ('statut', 'type_prestation')
-    search_fields = ('nom', 'numero_telephone', 'ville')
-
+class DemandeAccepteeAdmin(DemandeNettoyageAdmin):
     def get_queryset(self, request):
-        # Cette fonction récupère toutes les demandes, puis les filtre
         qs = super().get_queryset(request)
-        
-        # ⚠️ TRÈS IMPORTANT : Remplace 'Confirmé' par le mot EXACT 
-        # que tu as mis dans tes choix de statut (ex: 'Accepté', 'Valide', etc.)
-        return qs.filter(statut='ACCEPTEE') 
+        return qs.filter(statut='ACCEPTEE')
 
 
 @admin.register(Avis)

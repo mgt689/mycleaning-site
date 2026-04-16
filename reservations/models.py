@@ -13,6 +13,7 @@ class DemandeNettoyage(models.Model):
     type_prestation = models.CharField(max_length=20, choices=TYPE_PRESTATION_CHOICES, verbose_name="Type de prestation")
     surface = models.IntegerField(verbose_name="Surface (en m²)") # Nouveau !
     date_souhaitee = models.DateField(blank=True, null=True, verbose_name="Date souhaitée pour l'intervention")
+    prix_devis = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Prix du devis (€)")
 
     # --- Adresse détaillée ---
     rue = models.CharField(max_length=255, verbose_name="Numéro et nom de rue")
