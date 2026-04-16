@@ -3,8 +3,12 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.utils import timezone
 from django.utils.text import slugify
+from django.core.mail import send_mail
+import logging
 
 from .models import DemandeNettoyage, DemandeAcceptee, Avis, Photo
+
+logger = logging.getLogger(__name__)
 
 
 @admin.register(DemandeNettoyage)
@@ -151,7 +155,6 @@ class DemandeNettoyageAdmin(admin.ModelAdmin):
             sujet = f"Mise à jour de votre demande de nettoyage - {obj.get_statut_display()}"
             message_perso = obj.commentaire_admin if obj.commentaire_admin else "Pas de message supplémentaire."
             
-            # ATTENTION : La ligne ci-dessous doit être alignée avec 'sujet'
             corps_email = f"""
 Bonjour {obj.nom},
 
@@ -165,17 +168,19 @@ Message de notre équipe :
 Nous restons à votre disposition pour toute question.
 L'équipe MyCleaning.
 """
-            # Tout ce bloc doit aussi être aligné avec 'corps_email'
-            from django.core.mail import send_mail
-            send_mail(
-                sujet,
-                corps_email,
-                'contact@mycleaning.studio',
-                [obj.email],
-                fail_silently=True,
-            )
+            
+            try:
+                send_mail(
+                    sujet,
+                    corps_email,
+                    'contact@mycleaning.studio',
+                    [obj.email],
+                    fail_silently=False,
+                )
+                logger.info(f"Email statut envoyé à {obj.email} ({obj.nom})")
+            except Exception as e:
+                logger.error(f"Erreur lors de l'envoi du mail statut à {obj.email}: {str(e)}")
 
-        # Cette ligne doit être alignée avec le 'if'
         super().save_model(request, obj, form, change)
 
 

@@ -3,6 +3,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .forms import DemandeForm
 from .models import Avis, Photo
+import logging
+
+logger = logging.getLogger(__name__)
 
 def accueil(request):
     """Vue pour la page d'accueil avec avis et photos"""
@@ -48,13 +51,18 @@ Connectez-vous sur votre espace administrateur pour voir les détails :
 https://mycleaning-sites-4vyvg.ondigitalocean.app/admin/
 
 Le système automatique MyCleaning."""
-            send_mail(
-                sujet_admin,
-                message_admin,
-                settings.DEFAULT_FROM_EMAIL,
-                [settings.ADMIN_EMAIL],
-                fail_silently=False,
-            )
+            try:
+                send_mail(
+                    sujet_admin,
+                    message_admin,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [settings.ADMIN_EMAIL],
+                    fail_silently=False,
+                )
+                logger.info(f"Email admin envoyé avec succès pour {nouvelle_demande.nom}")
+            except Exception as e:
+                logger.error(f"Erreur lors de l'envoi du mail admin: {str(e)}")
+                # On continue même si l'email échoue
             
             # 3. EMAIL DE CONFIRMATION AU CLIENT
             sujet_client = "✅ Votre demande de devis MyCleaning a été reçue"
@@ -73,13 +81,18 @@ Notre équipe examinera votre demande et vous recontactera sous peu au {nouvelle
 Cordialement,
 L'équipe MyCleaning
 contact@mycleaning.studio"""
-            send_mail(
-                sujet_client,
-                message_client,
-                settings.DEFAULT_FROM_EMAIL,
-                [nouvelle_demande.email],
-                fail_silently=False,
-            )
+            try:
+                send_mail(
+                    sujet_client,
+                    message_client,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [nouvelle_demande.email],
+                    fail_silently=False,
+                )
+                logger.info(f"Email confirmation envoyé à {nouvelle_demande.email}")
+            except Exception as e:
+                logger.error(f"Erreur lors de l'envoi du mail client: {str(e)}")
+                # On continue même si l'email échoue
 
             # 4. REDIRECTION (Très important pour éviter l'erreur !)
             return redirect('demande_succes')
