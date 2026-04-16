@@ -365,8 +365,8 @@
             <div class="card">
                 <img src="{{ photo.image.url }}" alt="{{ photo.titre }}" class="card-img">
                 <div class="card-content">
-                    <h3 class="card-title">{{ photo.titre }}</h3>
-                    <p class="card-desc">{{ photo.description }}</p>
+                    {% if photo.titre %}<h3 class="card-title">{{ photo.titre }}</h3>{% endif %}
+                    {% if photo.description %}<p class="card-desc">{{ photo.description }}</p>{% endif %}
                     <span class="badge">{{ photo.get_type_prestation_display }}</span>
                 </div>
             </div>
