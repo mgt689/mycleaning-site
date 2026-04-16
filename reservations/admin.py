@@ -74,6 +74,7 @@ class AvisAdmin(admin.ModelAdmin):
     list_filter = ('note', 'publie', 'type_prestation')
     search_fields = ('nom_client', 'texte')
     readonly_fields = ('date_creation',)
+    actions = ['delete_selected']
     
     fieldsets = (
         ('Client', {
@@ -94,6 +95,7 @@ class PhotoAdmin(admin.ModelAdmin):
     list_filter = ('type_prestation', 'affichee')
     search_fields = ('titre', 'description')
     readonly_fields = ('date_creation', 'apercu_image')
+    actions = ['delete_selected']
     
     fieldsets = (
         ('Photo', {
