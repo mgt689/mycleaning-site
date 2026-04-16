@@ -181,8 +181,8 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'contact@mycleaning.studio'
 
-# Email admin pour les notifications
-ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL')
+# Email admin pour les notifications (OBLIGATOIRE pour recevoir les alertes)
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'papidiop055@gmail.com')  # Défaut si non défini
 
 # HTTPS et sécurité des cookies
 # En développement (DEBUG=True), on désactive la sécurité HTTPS
