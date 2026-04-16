@@ -193,10 +193,33 @@ SESSION_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_HTTPONLY = True
 SECURE_SSL_REDIRECT = not DEBUG
 
-# Configuration Jazzmin
+# === CONFIGURATION DU TABLEAU DE BORD (JAZZMIN) ===
 JAZZMIN_SETTINGS = {
+    # Titre de la fenêtre
     "site_title": "MyCleaning Admin",
+    
+    # Titre sur l'écran de connexion
     "site_header": "MyCleaning",
+    
+    # Texte sur le logo en haut à gauche
+    "site_brand": "✨ MyCleaning Pro",
+    
+    # Message de bienvenue
+    "welcome_sign": "Bienvenue dans l'espace gestion MyCleaning",
+    
+    # Copyright en bas
+    "copyright": "MyCleaning Studio 2026",
+    
+    # Affichage du sidebar
     "show_sidebar": True,
     "navigation_expanded": True,
+    
+    # Cacher certaines choses qu'on ne veut pas voir
+    "show_ui_builder": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "litera",  # Un thème clair et moderne (très pro)
+    "navbar": "navbar-white navbar-light",
+    "sidebar": "sidebar-dark-primary",
 }
